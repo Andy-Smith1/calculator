@@ -30,6 +30,8 @@ body, html {
     grid-area: screen;
     text-align: right;
     padding-right: 1em;
+    word-wrap:break-word;
+    word-break:break-all;
 }
 
 #clear {
