@@ -4,17 +4,17 @@ const operatorButton = document.querySelectorAll('.operator');
 const equalsButton = document.querySelector('#equals');
 const clearButton = document.querySelector('#clear');
 
-let operator;
-let num1 = '';
-let num2 = '';
+let operator = '';
+let currentNum = '';
+let previousNum = '';
 let result = null;
-let hasDecimal = false;
 let lastOperator = '';
 
 //OPERATOR FUNCTIONS
 //add function
 function addNums(num1, num2) {
-    return num1 + num2;
+    return  num1 + num2;
+    
 };
 //subtract function
 function subtractNums(num1, num2) {
@@ -59,42 +59,36 @@ function operate(num1, operator, num2) {
 
 numberButton.forEach((number) => {
     number.addEventListener('click', (e) => {
-        if (e.target.innerText === '.' && !hasDecimal) {
-            hasDecimal = true;
-        } else if (e.target.innerText === '.' && hasDecimal) {
-            return;
-        }
-        num2 += e.target.innerText;
-        screen.innerText = num2;
+ 
+        currentNum += e.target.innerText;
+        currentNum = parseFloat(currentNum);
+        screen.innerText = currentNum;
     })
 });
 
-operatorButton.forEach((operator) => {
-    operator.addEventListener('click', (e) => {
-        if (!num2) return;
-        hasDecimal = false;
-        const operatorType = e.target.innerText;
-        if (num1 && num2 && operator) {
-            operate(num1, operatorType, num2);
-        } else {
-            result = parseFloat(num2);
-        }
-        nextNum(operatorType);
-        console.log(result);
+operatorButton.forEach((op) => {
+    op.addEventListener ('click', (e) => {
+        operator = e.target.innerText; 
+        previousNum = currentNum;
+        currentNum = '';
+    
     })
-});
 
-function nextNum(operator = '') {
-    num1 += num2
-    num2 = '';
-}
-
-equalsButton.addEventListener('click', (e) => {
-    if( !num1 || !num2 ) return;
-    hasDecimal = false;
-    operate();
-    nextNum();
-    screen.innerText = result;
-    num2 = result;
-    num1 = '';
 })
+
+
+equalsButton.addEventListener('click', () => {
+  operate(previousNum, operator, currentNum);
+  currentNum = result;
+  screen.innerText = Math.round(result * 100) / 100;
+})
+
+
+clearButton.addEventListener('click', () => {
+    operator = '';
+    currentNum = '';
+    previousNum = '';
+    result = null;
+    screen.innerText = currentNum;
+})
+
