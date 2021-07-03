@@ -8,7 +8,9 @@ let operator = '';
 let currentNum = '';
 let previousNum = '';
 let result = null;
-let lastOperator = '';
+let equalsIsClicked = false;
+
+
 
 //OPERATOR FUNCTIONS
 //add function
@@ -59,28 +61,42 @@ function operate(num1, operator, num2) {
 
 numberButton.forEach((number) => {
     number.addEventListener('click', (e) => {
- 
+        if (currentNum.toString().length > 14) {
+            return;
+        }
         currentNum += e.target.innerText;
         currentNum = parseFloat(currentNum);
         screen.innerText = currentNum;
     })
 });
 
+// WORKING BLOCK
 operatorButton.forEach((op) => {
     op.addEventListener ('click', (e) => {
-        operator = e.target.innerText; 
+        if (operator && previousNum && currentNum) {
+            operate(previousNum, operator, currentNum)
+            currentNum = result;
+            screen.innerText = Math.round(result * 100) / 100;
+        };
+        operator = e.target.innerText;
         previousNum = currentNum;
         currentNum = '';
-    
+        equalsIsClicked = false;
+        
     })
-
 })
 
 
+
 equalsButton.addEventListener('click', () => {
+    if (equalsIsClicked == true) {
+        return;
+    }
+  equalsIsClicked = true;
   operate(previousNum, operator, currentNum);
   currentNum = result;
   screen.innerText = Math.round(result * 100) / 100;
+  operator = '';
 })
 
 
@@ -89,6 +105,7 @@ clearButton.addEventListener('click', () => {
     currentNum = '';
     previousNum = '';
     result = null;
+    equalsIsClicked = false;
     screen.innerText = currentNum;
 })
 
